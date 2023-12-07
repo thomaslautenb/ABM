@@ -1,10 +1,80 @@
-worry = random.number(0,1)
+#initial set of variables 
+worry = random.number(0,1) #gaussian distribution with mu=0.2 
+
+RE = ResponseEfficiacy 
+SE = SelfEfficiacy 
+FD = PerceivedFloodDamage 
+FP = PerceivedFloodProbability
+GP = Government_Policy
+
+class household
+self.location
+self.worry 
+self.neighbours
+
+self.neighbours = closest_households(5)
 
 #perceived_flood_damage and perceived_flood_probability  is defined in model
-def computue_TA(worry, fd, fp):
-    Threat_appraisal = worry + perceived_flood_damage + Perceived_flood_probabilityerceived_flood_probability / 3
+def computue_TA(Worry, FD, FP):
+    TA = worry + FD + FP
     return TA 
 
+def compute_CA(Cost, RE, SE, GP ):
+    CA = (RE + SE-Cost)*GP
+    return CA
 
-compute_w2p(TA, CA)
-w2p = Threat_appraisal + coping_appraisal / 2
+def compute_W2P(TA, CA):
+    W2P = TA + CA
+    return W2P
+
+if(W2P > threshold): 
+    action()
+elif(W2P > threshold)
+    worry = worry * rd.gauss(mu=1.1)
+
+
+
+def action(income, age):
+    if (income > I): 
+        if (age < A):
+            flood_barrier()
+        elif (age >A): 
+            structural_measures()
+    elif (income <I): 
+        if (age < A): 
+            adaptive_building_use()
+        elif(age > A): 
+            flood_insurance()
+
+
+#actions: 
+def flood_barrier(): 
+    flood_damage_actual = flood_damage_actual*0.2
+    self.worry  = self.worry*0.2
+    self.adapt = 0.2
+
+def structural_measure(): 
+    flood_damage_actual = flood_damage_actual*0.4
+    self.worry  = self.worry*0.4
+    self.adapt = 0.4    
+
+def adaptive_building_use(): 
+    flood_damage_actual = flood_damage_actual*0.6
+    self.worry  = self.worry*0.6
+    self.adapt = 0.6
+
+def flood_insurance(): 
+    flood_damage_actual = flood_damage_actual*0.8
+    self.worry  = self.worry*0.8
+    self.adapt = 0.8
+
+end class
+    
+class neighbours
+superclass household
+
+self.adapt 
+
+
+        
+
