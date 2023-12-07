@@ -1,0 +1,10 @@
+worry = random.number(0,1)
+
+#perceived_flood_damage and perceived_flood_probability  is defined in model
+def computue_TA(worry, fd, fp):
+    Threat_appraisal = worry + perceived_flood_damage + Perceived_flood_probabilityerceived_flood_probability / 3
+    return TA 
+
+
+compute_w2p(TA, CA)
+w2p = Threat_appraisal + coping_appraisal / 2
