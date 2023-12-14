@@ -1,36 +1,41 @@
 #initial set of variables 
-worry = random.number(0,1) #gaussian distribution with mu=0.2 
+worry = random.gaus(0.2,1) #gaussian distribution with mu=0.2 
 
 RE = ResponseEfficiacy 
-SE = SelfEfficiacy 
-FD = PerceivedFloodDamage 
-FP = PerceivedFloodProbability
-GP = Government_Policy
+SE = Self_efficiacy 
+FD = Perceived_flood_damage 
+FP = Perceived_flood-probability
+GP = Government_policy
 
-class household
-self.location
-self.worry 
-self.neighbours
+class household:
+    def__ init__(self, location, worry):
+        self.location = location
+        self.worry = worry
+        self.neighbours = [] #List of neighbour objects of clostest households(5)
+        self.avg_investment_level = 0 
 
-self.neighbours = closest_households(5)
+def update_avg_investment_level(self):
+        total_investment = sum([neighbour.adapt for neighbour in self.neighbours])
+        self.avg_investment_level = total_investment / len(self.neighbours) if self.neighbours else 0   
 
 #perceived_flood_damage and perceived_flood_probability  is defined in model
-def computue_TA(Worry, FD, FP):
-    TA = worry + FD + FP
-    return TA 
+def computue_Threath_appraisal(Worry, Perceived_flood_damage, Perceived_flood_probability):
+    Threath_appraisal = worry + Perceived_flood_damage + Perceived_flood_probability
+    return Threath_appraisal 
 
-def compute_CA(Cost, RE, SE, GP ):
-    CA = (RE + SE-Cost)*GP
-    return CA
+def compute_Coping_appraisal(Cost, Response_efficiacy , Self_efficiacy , Government_policy ):
+    Coping_appraisal = (Response_efficiacy  + Self_efficiacy -Cost)*Government_policy
+    return Coping_appraisal
 
-def compute_W2P(TA, CA):
-    W2P = TA + CA
+def compute_W2P(Threath_appraisal, Coping_appraisal):
+    W2P = Threath_appraisal + Coping_appraisal
     return W2P
 
-if(W2P > threshold): 
-    action()
-elif(W2P > threshold)
-    worry = worry * rd.gauss(mu=1.1)
+def decide.action(self,threshold, income,age):
+    if(W2P > threshold): 
+        action()
+    elif(W2P > threshold)
+        worry = worry * random.gauss(mu=1.1)
 
 
 
