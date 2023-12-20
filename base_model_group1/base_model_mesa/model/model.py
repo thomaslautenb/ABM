@@ -86,6 +86,7 @@ class AdaptationModel(Model):
                         "IsAdapted": "is_adapted",
                         "FriendsCount": lambda a: a.count_friends(radius=1),
                         "location":"location",
+                        "Worry" : "worry"
                         # ... other reporters ...
                         }
         #set up the data collector 
