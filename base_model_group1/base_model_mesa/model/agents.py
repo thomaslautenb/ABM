@@ -16,27 +16,28 @@ class Households(Agent):
     In a real scenario, this would be based on actual geographical data or more complex logic.
     """
 
-    def _init_(self, unique_id, model, worry=None):
-        super()._init_(unique_id, model)
+    def __init__(self, unique_id, model, worry=None):
+        super().__init__(unique_id, model)
         self.is_adapted = False  # Initial adaptation status set to False
-        self.adaptation_actions = [] # List to store adaptation actions and timesteps
+        self.adaptation_actions = []
         # getting flood map values
         # Get a random location on the map
         loc_x, loc_y = generate_random_location_within_map_domain()
         self.location = Point(loc_x, loc_y)
+        
+        #List to store adaptiation and timesteps 
+        self.adatption_action = []; 
 
-        #define attribute worry
-        # If worry is not provided, initialize it using a beta distribution with mean 0.3
-        if worry is None:
-            # Initialize worry using the beta distribution
-            self.worry = random.betavariate(0.3, 0.7)
-        else:
-            self.worry = worry
+        if worry is None: 
+            self.worry = random.betavariate(0.3,0.7)
+        else: 
+            self.worry = worry 
+        
+        #define neighbours: 
+        self.neighbours = []
+        self.avg_investment_neighbour =0 
+        self.investment = 0 
 
-        #define neigbours
-        self.neighbours = [] # List of neighbour objects of closest households
-        self.avg_investment_neighbour = 0
-        self.investment = 0
 
         # Check whether the location is within floodplain
         self.in_floodplain = False
@@ -61,19 +62,6 @@ class Households(Agent):
         #calculate the actual flood damage given the actual flood depth. Flood damage is a factor between 0 and 1
         self.flood_damage_actual = calculate_basic_flood_damage(flood_depth=self.flood_depth_actual)
     
-    # Function to count friends who can be influencial.
-    def count_friends(self, radius):
-        """Count the number of neighbors within a given radius (number of edges away). This is social relation and not spatial"""
-        friends = self.model.grid.get_neighborhood(self.pos, include_center=False, radius=radius)
-        #update self.neighbours list to counted number of closest neighbours!!!
-        return len(friends)
-
-    def step(self):
-        # Logic for adaptation based on estimated flood damage and a random chance.
-        # These conditions are examples and should be refined for real-world applications.
-        if self.flood_damage_estimated > 0.15 and random.random() < 0.2:
-            self.is_adapted = True  # Agent adapts to flooding
-   
     def update_self_investment (self, c):
         self.investment += c
     
@@ -138,18 +126,31 @@ class Households(Agent):
         self.record_action('flood_insurance')  # Record the action
 
     def record_action(self, action_name):
-        self.adaptation_actions.append((action_name, self.model.schedule.time))
+        self.adaptation_actions.append(action_name)
 
+
+    # Function to count friends who can be influencial.
+    def count_friends(self, radius):
+        """Count the number of neighbors within a given radius (number of edges away). This is social relation and not spatial"""
+        friends = self.model.grid.get_neighborhood(self.pos, include_center=False, radius=radius)
+        return len(friends)
+
+    def step(self):
+        # Logic for adaptation based on estimated flood damage and a random chance.
+        # These conditions are examples and should be refined for real-world applications.
+        if self.flood_damage_estimated > 0.15 and random.random() < 0.2:
+            self.is_adapted = True  # Agent adapts to flooding
+        
 # Define the Government agent class
 class Government(Agent):
     """
     A government agent that currently doesn't perform any actions.
     """
-    def _init_(self, unique_id, model):
-        super()._init_(unique_id, model)
+    def __init__(self, unique_id, model):
+        super().__init__(unique_id, model)
 
     def step(self):
         # The government agent doesn't perform any actions.
         pass
 
-# More agent classes can be added here, e.g. for insurance agents.
+# More agent classes can be added here, e.g. for insurance agents.
