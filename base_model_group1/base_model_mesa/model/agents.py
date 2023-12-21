@@ -19,14 +19,26 @@ class Households(Agent):
     def __init__(self, unique_id, model, worry=None):
         super().__init__(unique_id, model)
         self.is_adapted = False  # Initial adaptation status set to False
-        self.adaptation_actions = []
+        #parameter
+        self.cost = 1
+        self.response_efficacy =1
+        self.self_efficacy = 1
+        self.government_policy =1
+
+        
+
         # getting flood map values
         # Get a random location on the map
+        
+        #
+        
         loc_x, loc_y = generate_random_location_within_map_domain()
         self.location = Point(loc_x, loc_y)
         
         #List to store adaptiation and timesteps 
-        self.adatption_action = []; 
+ 
+        self.adaptation_action = 0; 
+
 
         if worry is None: 
             self.worry = random.betavariate(0.3,0.7)
@@ -65,8 +77,8 @@ class Households(Agent):
     def update_self_investment (self, c):
         self.investment += c
     
-    def compute_threat_appraisal(self, perceived_flood_damage, perceived_flood_probability):
-        threat_appraisal = self.worry + perceived_flood_damage + perceived_flood_probability
+    def compute_threat_appraisal(self, flood_damage_estimated, perceived_flood_probability):
+        threat_appraisal = self.worry + flood_damage_estimated + perceived_flood_probability
         return threat_appraisal
 
     def compute_coping_appraisal(self, cost, response_efficacy, self_efficacy, government_policy):
@@ -105,25 +117,30 @@ class Households(Agent):
         self.flood_damage_actual *= 0.2
         self.worry *= 0.2
         self.update_self_investment(0.8) 
-        self.record_action('flood_barrier')  # Record the action
+        #self.record_action('flood_barrier')  # Record the action
+        self.adaptation_action = 1
 
     def structural_measures(self):
         self.flood_damage_actual *= 0.4
         self.worry *= 0.4
         self.update_self_investment(0.6)
-        self.record_action('structural_measures')
+        #self.record_action('structural_measures')
+        self.adaptation_action = 2
 
     def adaptive_building_use(self):
         self.flood_damage_actual *= 0.6
         self.worry *= 0.6
         self.update_self_investment(0.4)
-        self.record_action('adaptive_building_use')  # Record the action
+        #self.record_action('adaptive_building_use')  # Record the action
+        self.adaptation_action = 3
+
 
     def flood_insurance(self):
         self.flood_damage_actual *= 0.8
         self.worry *= 0.8
         self.update_self_investment(0.2)
-        self.record_action('flood_insurance')  # Record the action
+        #self.record_action('flood_insurance')  # Record the action
+        self.adaptation_action = 4
 
     def record_action(self, action_name):
         self.adaptation_actions.append(action_name)
@@ -136,6 +153,12 @@ class Households(Agent):
         return len(friends)
 
     def step(self):
+        
+        threat_appraisal = self.compute_threat_appraisal(flood_damage_estimated=self.flood_damage_estimated, perceived_flood_probability=1)
+
+        coping_appraisal = self.compute_coping_appraisal(cost=self.cost, response_efficacy=self.response_efficacy, self_efficacy=self.self_efficacy, government_policy = self.government_policy)
+        w2p = self.compute_w2p(threat_appraisal, coping_appraisal)
+
         # Logic for adaptation based on estimated flood damage and a random chance.
         # These conditions are examples and should be refined for real-world applications.
         if self.flood_damage_estimated > 0.15 and random.random() < 0.2:
