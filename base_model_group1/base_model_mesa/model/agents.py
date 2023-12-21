@@ -16,17 +16,22 @@ class Households(Agent):
     In a real scenario, this would be based on actual geographical data or more complex logic.
     """
 
-    def __init__(self, unique_id, model, worry=None):
-        super().__init__(unique_id, model)
+    def _init_(self, unique_id, model, worry=None):
+        super()._init_(unique_id, model)
         self.is_adapted = False  # Initial adaptation status set to False
-
+        self.adaptation_actions = [] # List to store adaptation actions and timesteps
         # getting flood map values
         # Get a random location on the map
         loc_x, loc_y = generate_random_location_within_map_domain()
         self.location = Point(loc_x, loc_y)
 
         #define attribute worry
-        self.worry = random.gauss(0.2, 1) if worry is None else worry
+        # If worry is not provided, initialize it using a beta distribution with mean 0.3
+        if worry is None:
+            # Initialize worry using the beta distribution
+            self.worry = random.betavariate(0.3, 0.7)
+        else:
+            self.worry = worry
 
         #define neigbours
         self.neighbours = [] # List of neighbour objects of closest households
@@ -85,12 +90,12 @@ class Households(Agent):
         return w2p
     
     #first the agent has to decide on whether it will take action or not
-    def decide_action(self, threshold, income, age):
+    def decide_action(self, income, age):
         w2p = self.compute_w2p(self.compute_threat_appraisal(), self.compute_coping_appraisal())
-        if w2p > threshold:
+        if w2p > 0.5:
             self.action(income, age)
         else:
-            self.worry *= random.gauss(mu=1.1, sigma=0.1)
+            self.worry *= 0.05
 
     #then if it takes action it has to decide on which action it will take
     def action(self, income, age):
@@ -111,33 +116,40 @@ class Households(Agent):
         # Assuming flood_damage_actual is a property of the household
         self.flood_damage_actual *= 0.2
         self.worry *= 0.2
-        self.update_self_investment(0.8)
+        self.update_self_investment(0.8) 
+        self.record_action('flood_barrier')  # Record the action
 
     def structural_measures(self):
         self.flood_damage_actual *= 0.4
         self.worry *= 0.4
         self.update_self_investment(0.6)
+        self.record_action('structural_measures')
 
     def adaptive_building_use(self):
         self.flood_damage_actual *= 0.6
         self.worry *= 0.6
         self.update_self_investment(0.4)
+        self.record_action('adaptive_building_use')  # Record the action
 
     def flood_insurance(self):
         self.flood_damage_actual *= 0.8
         self.worry *= 0.8
         self.update_self_investment(0.2)
+        self.record_action('flood_insurance')  # Record the action
+
+    def record_action(self, action_name):
+        self.adaptation_actions.append((action_name, self.model.schedule.time))
 
 # Define the Government agent class
 class Government(Agent):
     """
     A government agent that currently doesn't perform any actions.
     """
-    def __init__(self, unique_id, model):
-        super().__init__(unique_id, model)
+    def _init_(self, unique_id, model):
+        super()._init_(unique_id, model)
 
     def step(self):
         # The government agent doesn't perform any actions.
         pass
 
-# More agent classes can be added here, e.g. for insurance agents.
+# More agent classes can be added here, e.g. for insurance agents.
