@@ -90,7 +90,9 @@ class AdaptationModel(Model):
                         "Self_Adaption": "adaptation_action",
                         "Self_Investment": "investment", 
                         "Avg_Invest": "avg_investment_neighbour",
-                        "Neighbours": "neighbours"
+                        "Neighbours": "neighbours", 
+                        "Income": 'income', 
+                        "Age": "age"
 
                         # ... other reporters ...
                         }
@@ -188,6 +190,10 @@ class AdaptationModel(Model):
         assume local flooding instead of global flooding). The actual flood depth can be 
         estimated differently
         """
+        #
+           
+
+
         if self.schedule.steps == 5:
             for agent in self.schedule.agents:
                 # Calculate the actual flood depth as a random number between 0.5 and 1.2 times the estimated flood depth

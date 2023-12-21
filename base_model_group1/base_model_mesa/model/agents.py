@@ -25,7 +25,8 @@ class Households(Agent):
         self.self_efficacy = 1
         self.government_policy =1
 
-        
+        self.income =  random.gauss(50000, 20000)
+        self.age =  random.gauss(40, 10)
 
         # getting flood map values
         # Get a random location on the map
@@ -90,8 +91,8 @@ class Households(Agent):
         return w2p
     
     #first the agent has to decide on whether it will take action or not
-    def decide_action(self, income, age):
-        w2p = self.compute_w2p(self.compute_threat_appraisal(), self.compute_coping_appraisal())
+    def decide_action(self, income, age, w2p):
+        #w2p = self.compute_w2p(self.compute_threat_appraisal(), self.compute_coping_appraisal())
         if w2p > 0.5:
             self.action(income, age)
         else:
@@ -158,7 +159,8 @@ class Households(Agent):
 
         coping_appraisal = self.compute_coping_appraisal(cost=self.cost, response_efficacy=self.response_efficacy, self_efficacy=self.self_efficacy, government_policy = self.government_policy)
         w2p = self.compute_w2p(threat_appraisal, coping_appraisal)
-
+        self.decide_action(income=self.income, age=self.age, w2p=w2p)
+        
         # Logic for adaptation based on estimated flood damage and a random chance.
         # These conditions are examples and should be refined for real-world applications.
         if self.flood_damage_estimated > 0.15 and random.random() < 0.2:
