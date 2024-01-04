@@ -90,10 +90,13 @@ class AdaptationModel(Model):
                         "Worry" : "worry", 
                         "Self_Adaption": "adaptation_action",
                         "Self_Investment": "investment", 
-                        "Avg_Invest": "avg_investment_neighbour",
+                        "Avg_Invest": "avg_invest",
                         "Neighbours": "neighbours", 
                         "Income": 'income', 
-                        "Age": "age"
+                        "Age": "age",
+                        "Friends": "friends",
+                        "Costs": "cost",
+                        "W2P": "w2p"
 
                         # ... other reporters ...
                         }
