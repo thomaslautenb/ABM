@@ -90,11 +90,11 @@ class AdaptationModel(Model):
                         "Worry" : "worry", 
                         "Self_Adaption": "adaptation_action",
                         "Self_Investment": "investment", 
-                        "Avg_Invest": "avg_invest",
+                        "Avg_Invest": "avg_investment_neighbour",
                         "Neighbours": "neighbours", 
                         "Income": 'income', 
                         "Age": "age",
-                        "Friends": "friends",
+                        #"Friends": lambda a: a.friends(radius=1),
                         "Costs": "cost",
                         "W2P": "w2p"
 

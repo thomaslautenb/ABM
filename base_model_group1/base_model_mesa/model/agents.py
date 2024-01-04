@@ -31,8 +31,8 @@ class Households(Agent):
 
         # getting flood map values
         # Get a random location on the map
-        #
-        
+        #self.friends = []
+
         loc_x, loc_y = generate_random_location_within_map_domain()
         self.location = Point(loc_x, loc_y)
         
@@ -42,7 +42,7 @@ class Households(Agent):
 
 
         if worry is None: 
-            self.worry = random.betavariate(0.1,0.2)
+            self.worry = max(0,random.gauss(0.2,0.15))
         else: 
             self.worry = worry 
         
@@ -77,7 +77,8 @@ class Households(Agent):
         self.flood_damage_actual = calculate_basic_flood_damage(flood_depth=self.flood_depth_actual)
 
     def update_costs(self,radius=1):
-       self.cost = self.cost - self.investment/ len(self.model.grid.get_neighborhood(self.pos, include_center=False, radius=radius))
+       
+       self.cost = self.cost - 2* self.investment/ len(self.model.grid.get_neighborhood(self.pos, include_center=False, radius=radius))
 
     def update_self_investment (self, c):
         self.investment = c
@@ -100,7 +101,7 @@ class Households(Agent):
         if w2p > 0.5:
             self.action(income, age)
         else:
-            self.worry += 0.025 
+            self.worry += 0.03
 
     #then if it takes action it has to decide on which action it will take
     def action(self, income, age):
@@ -127,6 +128,7 @@ class Households(Agent):
         #self.record_action('flood_barrier')  # Record the action
         self.adaptation_action = 1
         self.is_adapted=True
+        self.update_costs()
 
     def structural_measures(self):
         self.flood_damage_actual *= 0.4
@@ -135,6 +137,7 @@ class Households(Agent):
         #self.record_action('structural_measures')
         self.adaptation_action = 2
         self.is_adapted=True
+        self.update_costs()
 
     def adaptive_building_use(self):
         self.flood_damage_actual *= 0.6
@@ -143,6 +146,7 @@ class Households(Agent):
         #self.record_action('adaptive_building_use')  # Record the action
         self.adaptation_action = 3
         self.is_adapted=True
+        self.update_costs()
 
 
     def flood_insurance(self):
@@ -152,6 +156,7 @@ class Households(Agent):
         #self.record_action('flood_insurance')  # Record the action
         self.adaptation_action = 4
         self.is_adapted=True 
+        self.update_costs()
 
     #def record_action(self, action_name):
     #    self.adaptation_actions.append(action_name)
@@ -161,6 +166,7 @@ class Households(Agent):
     def count_friends(self, radius):
         """Count the number of neighbors within a given radius (number of edges away). This is social relation and not spatial"""
         friends = self.model.grid.get_neighborhood(self.pos, include_center=False, radius=radius)
+    
         return len(friends)
     
     def avg_cost_friends(self, radius):
@@ -168,7 +174,14 @@ class Households(Agent):
         number_friends = len(self.model.grid.get_neighborhood(self.pos, include_center=False, radius=radius))
         self.avg_invest = self.investment / number_friends
 
-
+#somehow doing things with friends!
+    # def update_friends(self, radius):
+    #     """Count the number of neighbors within a given radius (number of edges away). This is social relation and not spatial"""
+    #     friends = self.model.grid.get_neighborhood(self.pos, include_center=False, radius=radius)
+    #     for f in friends:
+    #         other_agent = self.random.choice(friends)
+    #         other_agent.avg_investment_neighbour = self.investment
+    #     return other_agent.avg_investment_neighbour
 
     def step(self):
         
@@ -178,12 +191,12 @@ class Households(Agent):
         w2p = self.compute_w2p(threat_appraisal, coping_appraisal)
         self.decide_action(income=self.income, age=self.age, w2p=w2p)
         self.avg_cost_friends(radius=1) 
-        self.update_costs()
         
+        #self.update_friends(radius=1)
         # Logic for adaptation based on estimated flood damage and a random chance.
         # These conditions are examples and should be refined for real-world applications.
-        if self.flood_damage_estimated > 0.15 and random.random() < 0.2:
-            self.is_adapted = True  # Agent adapts to flooding
+        #if self.flood_damage_estimated > 0.15 and random.random() < 0.2:
+            #self.is_adapted = True  # Agent adapts to flooding
         
 # Define the Government agent class
 class Government(Agent):
