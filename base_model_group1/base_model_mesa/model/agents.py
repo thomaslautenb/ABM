@@ -78,7 +78,8 @@ class Households(Agent):
         self.flood_damage_actual = calculate_basic_flood_damage(flood_depth=self.flood_depth_actual)
 
     def update_costs(self):
-       self.cost = self.cost -  0.3 *self.cum_invest_neighbour
+       #cost is one always -> before every actualisierung cost defined as one still -> avoid improper actualisierung von cost till negative
+       self.cost = 1 -  0.3 *self.cum_invest_neighbour
 
     def update_self_investment (self, c):
         self.investment = c
@@ -128,8 +129,8 @@ class Households(Agent):
         #self.record_action('flood_barrier')  # Record the action
         self.adaptation_action = 1
         self.is_adapted=True
-        self.avg_cost_friends() 
-        self.update_costs()
+        #self.avg_cost_friends() 
+        #self.update_costs()
 
     def structural_measures(self):
         self.flood_damage_actual *= 0.4
@@ -138,8 +139,8 @@ class Households(Agent):
         #self.record_action('structural_measures')
         self.adaptation_action = 2
         self.is_adapted=True
-        self.avg_cost_friends() 
-        self.update_costs()
+        #self.avg_cost_friends() 
+        #self.update_costs()
 
     def adaptive_building_use(self):
         self.flood_damage_actual *= 0.6
@@ -148,8 +149,8 @@ class Households(Agent):
         #self.record_action('adaptive_building_use')  # Record the action
         self.adaptation_action = 3
         self.is_adapted=True
-        self.avg_cost_friends() 
-        self.update_costs()
+        #self.avg_cost_friends() 
+        #self.update_costs()
 
 
     def flood_insurance(self):
@@ -159,8 +160,8 @@ class Households(Agent):
         #self.record_action('flood_insurance')  # Record the action
         self.adaptation_action = 4
         self.is_adapted=True 
-        self.avg_cost_friends() 
-        self.update_costs()
+        #self.avg_cost_friends() 
+        #self.update_costs()
         
 
     #def record_action(self, action_name):
@@ -175,6 +176,7 @@ class Households(Agent):
         return len(friends)
     
     def avg_cost_friends(self):
+        self.cum_invest_neighbour = 0 #set to 0 before adding the other agents'investments
         neighbors = self.model.grid.get_neighbors(self.pos, include_center=False)
         for neighbor_agent in neighbors:
             if neighbor_agent != self:  # Avoid interacting with itself
@@ -206,8 +208,10 @@ class Households(Agent):
 
         coping_appraisal = self.compute_coping_appraisal(cost=self.cost, response_efficacy=self.response_efficacy, self_efficacy=self.self_efficacy)
         w2p = self.compute_w2p(threat_appraisal, coping_appraisal)
-        self.decide_action(income=self.income, age=self.age, w2p=w2p)
-
+        self.decide_action(income=self.income, age=self.age, w2p=w2p)   
+        #after every step the cumulative investment of neighbours and the costs should be actualized -> so that the costs can actually create emergent behaviour for the agent. Because if you actualise it after the action is taken, then it acutally doesnt matter anymore because the agent cannot take any more actions, so its kind a nonsense. 
+        self.avg_cost_friends()
+        self.update_costs()
         
         #self.update_friends(radius=1)
         # Logic for adaptation based on estimated flood damage and a random chance.
