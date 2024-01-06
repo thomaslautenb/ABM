@@ -90,7 +90,7 @@ class AdaptationModel(Model):
                         "Worry" : "worry", 
                         "Self_Adaption": "adaptation_action",
                         "Self_Investment": "investment", 
-                        "Avg_Invest": "avg_investment_neighbour",
+                        "Cum_Invest": "cum_invest_neighbour",
                         "Neighbours": "neighbours", 
                         "Income": 'income', 
                         "Age": "age",

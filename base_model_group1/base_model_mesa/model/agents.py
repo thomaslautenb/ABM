@@ -3,6 +3,7 @@ import random
 from mesa import Agent
 from shapely.geometry import Point
 from shapely import contains_xy
+import numpy as np
 
 # Import functions from functions.py
 from functions import generate_random_location_within_map_domain, get_flood_depth, calculate_basic_flood_damage, floodplain_multipolygon
@@ -51,7 +52,7 @@ class Households(Agent):
         self.avg_investment_neighbour =0 
         self.investment = 0 
         self.avg_invest = 0
-
+        self.cum_invest_neighbour = 0
 
         # Check whether the location is within floodplain
         self.in_floodplain = False
@@ -128,6 +129,7 @@ class Households(Agent):
         #self.record_action('flood_barrier')  # Record the action
         self.adaptation_action = 1
         self.is_adapted=True
+        self.avg_cost_friends() 
         self.update_costs()
 
     def structural_measures(self):
@@ -137,6 +139,7 @@ class Households(Agent):
         #self.record_action('structural_measures')
         self.adaptation_action = 2
         self.is_adapted=True
+        self.avg_cost_friends() 
         self.update_costs()
 
     def adaptive_building_use(self):
@@ -146,6 +149,7 @@ class Households(Agent):
         #self.record_action('adaptive_building_use')  # Record the action
         self.adaptation_action = 3
         self.is_adapted=True
+        self.avg_cost_friends() 
         self.update_costs()
 
 
@@ -156,23 +160,37 @@ class Households(Agent):
         #self.record_action('flood_insurance')  # Record the action
         self.adaptation_action = 4
         self.is_adapted=True 
+        self.avg_cost_friends() 
         self.update_costs()
+        
 
     #def record_action(self, action_name):
     #    self.adaptation_actions.append(action_name)
-
+    def get_self_investment(self): 
+        return self.investment
 
     # Function to count friends who can be influencial.
     def count_friends(self, radius):
         """Count the number of neighbors within a given radius (number of edges away). This is social relation and not spatial"""
-        friends = self.model.grid.get_neighborhood(self.pos, include_center=False, radius=radius)
-    
+        friends = self.model.grid.get_neighborhood(self.pos, include_center=False , radius=radius)
         return len(friends)
     
-    def avg_cost_friends(self, radius):
-        """Count the number of neighbors within a given radius (number of edges away). This is social relation and not spatial"""
-        number_friends = len(self.model.grid.get_neighborhood(self.pos, include_center=False, radius=radius))
-        self.avg_invest = self.investment / number_friends
+    def avg_cost_friends(self):
+        neighbors = self.model.grid.get_neighbors(self.pos, include_center=False)
+        for neighbor_agent in neighbors:
+            if neighbor_agent != self:  # Avoid interacting with itself
+                self.cum_invest_neighbour += neighbor_agent.investment
+                # Access and modify the variable of the neighbor agent
+                # Print the interaction details
+                #print(f"{self.unique_id} interacting with {neighbor_agent.unique_id}. Neighbor's variable: {neighbor_agent.agent_variable}")
+    
+    
+    # def avg_cost_friends(self, radius):
+    #     """Count the number of neighbors within a given radius (number of edges away). This is social relation and not spatial"""
+    #     friends = self.model.grid.get_neighborhood(self.pos, include_center=False, radius=radius)
+    #     invest_neighbours = [self.get_self_investment() for pos in friends]
+    #     avg_investment_neighbour = sum(invest_neighbours)/ len(friends)
+    #     return avg_investment_neighbour
 
 #somehow doing things with friends!
     # def update_friends(self, radius):
@@ -190,7 +208,7 @@ class Households(Agent):
         coping_appraisal = self.compute_coping_appraisal(cost=self.cost, response_efficacy=self.response_efficacy, self_efficacy=self.self_efficacy)
         w2p = self.compute_w2p(threat_appraisal, coping_appraisal)
         self.decide_action(income=self.income, age=self.age, w2p=w2p)
-        self.avg_cost_friends(radius=1) 
+
         
         #self.update_friends(radius=1)
         # Logic for adaptation based on estimated flood damage and a random chance.
