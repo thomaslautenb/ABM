@@ -77,9 +77,8 @@ class Households(Agent):
         #calculate the actual flood damage given the actual flood depth. Flood damage is a factor between 0 and 1
         self.flood_damage_actual = calculate_basic_flood_damage(flood_depth=self.flood_depth_actual)
 
-    def update_costs(self,radius=1):
-       
-       self.cost = self.cost - 2* self.investment/ len(self.model.grid.get_neighborhood(self.pos, include_center=False, radius=radius))
+    def update_costs(self):
+       self.cost = self.cost -  0.3 *self.cum_invest_neighbour
 
     def update_self_investment (self, c):
         self.investment = c
@@ -89,7 +88,7 @@ class Households(Agent):
         return threat_appraisal
 
     def compute_coping_appraisal(self, cost, response_efficacy, self_efficacy):
-        coping_appraisal = (response_efficacy + self_efficacy - cost) 
+        coping_appraisal =  (response_efficacy + self_efficacy - cost) 
         return coping_appraisal
 
     def compute_w2p(self, threat_appraisal, coping_appraisal):
