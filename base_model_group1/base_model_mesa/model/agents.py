@@ -34,6 +34,7 @@ class Households(Agent):
         # Get a random location on the map
         #self.friends = []
 
+
         loc_x, loc_y = generate_random_location_within_map_domain()
         self.location = Point(loc_x, loc_y)
         
@@ -97,17 +98,17 @@ class Households(Agent):
         return w2p
     
     #first the agent has to decide on whether it will take action or not
-    def decide_action(self, income, age, w2p):
+    def decide_action(self, income, age, w2p, I_threshold, A_threshold):
         #w2p = self.compute_w2p(self.compute_threat_appraisal(flood_damage_estimated=self.flood_damage_estimated, perceived_flood_probability=perceived_flood_probability), self.compute_coping_appraisal(cost=self.cost, response_efficacy=self.response_efficacy, self_efficacy=self.response_efficacy))
         if w2p > 0.5:
-            self.action(income, age)
+            self.action(income, age, I_threshold, A_threshold)
         else:
             self.worry += 0.03
 
     #then if it takes action it has to decide on which action it will take
-    def action(self, income, age):
-        I = 50000  # Some income threshold
-        A = 50  # Some age threshold
+    def action(self, income, age, I_threshold, A_threshold):
+        I = I_threshold  # Some income threshold
+        A = A_threshold  # Some age threshold
         if self.is_adapted == False:
             if income > I:
              if age < A:
@@ -208,7 +209,7 @@ class Households(Agent):
 
         coping_appraisal = self.compute_coping_appraisal(cost=self.cost, response_efficacy=self.response_efficacy, self_efficacy=self.self_efficacy)
         w2p = self.compute_w2p(threat_appraisal, coping_appraisal)
-        self.decide_action(income=self.income, age=self.age, w2p=w2p)   
+        self.decide_action(income=self.income, age=self.age, w2p=w2p, I_threshold=50000, A_threshold=50)   
         #after every step the cumulative investment of neighbours and the costs should be actualized -> so that the costs can actually create emergent behaviour for the agent. Because if you actualise it after the action is taken, then it acutally doesnt matter anymore because the agent cannot take any more actions, so its kind a nonsense. 
         self.avg_cost_friends()
         self.update_costs()
