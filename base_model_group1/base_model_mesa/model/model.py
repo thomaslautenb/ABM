@@ -40,6 +40,8 @@ class AdaptationModel(Model):
                  number_of_edges = 3,
                  # number of nearest neighbours for WS social network
                  number_of_nearest_neighbours = 5,
+                 I_threshold = 50000,
+                 policy = 1.0
                  ):
         
         super().__init__(seed = seed)
@@ -47,6 +49,9 @@ class AdaptationModel(Model):
         # defining the variables and setting the values
         self.number_of_households = number_of_households  # Total number of household agents
         self.seed = seed
+
+        self.I_threshold = I_threshold
+        self.policy = policy
 
         # network
         self.network = network # Type of network to be created

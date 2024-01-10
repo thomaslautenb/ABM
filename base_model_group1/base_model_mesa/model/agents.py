@@ -209,8 +209,8 @@ class Households(Agent):
 
 
 
-        w2p = self.compute_w2p(threat_appraisal, coping_appraisal, policy=0.5) #change policy
-        self.decide_action(income=self.income, age=self.age, w2p=w2p, I_threshold=50000, A_threshold=50)   
+        w2p = self.compute_w2p(threat_appraisal, coping_appraisal, policy=self.model.policy) #change policy
+        self.decide_action(income=self.income, age=self.age, w2p=w2p, I_threshold=self.model.I_threshold, A_threshold=50)   
         #after every step the cumulative investment of neighbours and the costs should be actualized -> so that the costs can actually create emergent behaviour for the agent. Because if you actualise it after the action is taken, then it acutally doesnt matter anymore because the agent cannot take any more actions, so its kind a nonsense. 
         self.avg_cost_friends()
         self.update_costs()
