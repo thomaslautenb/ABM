@@ -4,7 +4,7 @@ from mesa import Agent
 from shapely.geometry import Point
 from shapely import contains_xy
 import numpy as np
-
+random.seed(42)
 # Import functions from functions.py
 from functions import generate_random_location_within_map_domain, get_flood_depth, calculate_basic_flood_damage, floodplain_multipolygon
 
@@ -44,12 +44,12 @@ class Households(Agent):
 
 
         if worry is None: 
-            self.worry = max(0,random.gauss(0.2,0.15))
+            self.worry = max(0,random.gauss(0.1,0.15))
         else: 
             self.worry = worry 
         
         #define neighbours: 
-        self.neighbours = []
+        #self.neighbours = []
         self.avg_investment_neighbour =0 
         self.investment = 0 
         self.avg_invest = 0
@@ -90,11 +90,11 @@ class Households(Agent):
         return threat_appraisal
 
     def compute_coping_appraisal(self, cost, response_efficacy, self_efficacy):
-        coping_appraisal =  (response_efficacy + self_efficacy - cost) 
+        coping_appraisal =  (response_efficacy + self_efficacy - cost)
         return coping_appraisal
 
-    def compute_w2p(self, threat_appraisal, coping_appraisal):
-        w2p = threat_appraisal + coping_appraisal
+    def compute_w2p(self, threat_appraisal, coping_appraisal, policy):
+        w2p = threat_appraisal + policy *coping_appraisal
         return w2p
     
     #first the agent has to decide on whether it will take action or not
@@ -206,9 +206,11 @@ class Households(Agent):
     def step(self):
         
         threat_appraisal = self.compute_threat_appraisal(flood_damage_estimated=self.flood_damage_estimated/2, perceived_flood_probability=random.gauss(0.2,0.1))
-
         coping_appraisal = self.compute_coping_appraisal(cost=self.cost, response_efficacy=self.response_efficacy, self_efficacy=self.self_efficacy)
-        w2p = self.compute_w2p(threat_appraisal, coping_appraisal)
+
+
+
+        w2p = self.compute_w2p(threat_appraisal, coping_appraisal, policy=0.5) #change policy
         self.decide_action(income=self.income, age=self.age, w2p=w2p, I_threshold=50000, A_threshold=50)   
         #after every step the cumulative investment of neighbours and the costs should be actualized -> so that the costs can actually create emergent behaviour for the agent. Because if you actualise it after the action is taken, then it acutally doesnt matter anymore because the agent cannot take any more actions, so its kind a nonsense. 
         self.avg_cost_friends()
