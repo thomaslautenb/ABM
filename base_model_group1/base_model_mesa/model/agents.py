@@ -101,7 +101,7 @@ class Households(Agent):
         if w2p > 0.5:
             self.action(income, age, I_threshold, A_threshold)
         else:
-            self.worry += 0.02
+            self.worry += 0.013
 
     #then if it takes action it has to decide on which action it will take
     def action(self, income, age, I_threshold, A_threshold):
