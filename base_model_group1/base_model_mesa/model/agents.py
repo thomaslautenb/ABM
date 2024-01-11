@@ -22,8 +22,8 @@ class Households(Agent):
         #
         #self.w2p=0
         self.cost = 1
-        self.response_efficacy =max(0,random.gauss(0.1, 0.05))
-        self.self_efficacy = max(0,random.gauss(0.1, 0.05))
+        self.response_efficacy =max(0,random.gauss(0.1, 0.1))
+        self.self_efficacy = max(0,random.gauss(0.1, 0.1))
         self.government_policy =1
         self.income =  random.gauss(self.model.income_mean, 20000)
         self.age =  random.gauss(self.model.age_mean, 10)
@@ -42,7 +42,7 @@ class Households(Agent):
 
 
         if worry is None: 
-            self.worry = max(0,random.gauss(0.1,0.15))
+            self.worry = max(0,random.gauss(0.1,0.2))
         else: 
             self.worry = worry 
         
@@ -78,13 +78,13 @@ class Households(Agent):
 
     def update_costs(self):
        #cost is one always -> before every actualisierung cost defined as one still -> avoid improper actualisierung von cost till negative
-       self.cost = 1 -  0.3 *self.cum_invest_neighbour
+       self.cost = 1 -  0.02 *self.cum_invest_neighbour
 
     def update_self_investment (self, c):
         self.investment = c
     
     def compute_threat_appraisal(self, flood_damage_estimated, perceived_flood_probability):
-        threat_appraisal = self.worry + flood_damage_estimated + perceived_flood_probability
+        threat_appraisal = (self.worry + flood_damage_estimated + perceived_flood_probability)
         return threat_appraisal
 
     def compute_coping_appraisal(self, cost, response_efficacy, self_efficacy):
@@ -92,7 +92,7 @@ class Households(Agent):
         return coping_appraisal
 
     def compute_w2p(self, threat_appraisal, coping_appraisal, policy):
-        w2p = threat_appraisal + policy *coping_appraisal
+        w2p = 0.5*(threat_appraisal + policy *coping_appraisal)
         return w2p
     
     #first the agent has to decide on whether it will take action or not
@@ -101,7 +101,7 @@ class Households(Agent):
         if w2p > 0.5:
             self.action(income, age, I_threshold, A_threshold)
         else:
-            self.worry += 0.03
+            self.worry += 0.02
 
     #then if it takes action it has to decide on which action it will take
     def action(self, income, age, I_threshold, A_threshold):
