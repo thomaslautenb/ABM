@@ -25,9 +25,8 @@ class Households(Agent):
         self.response_efficacy =max(0,random.gauss(0.1, 0.05))
         self.self_efficacy = max(0,random.gauss(0.1, 0.05))
         self.government_policy =1
-
-        self.income =  random.gauss(50000, 20000)
-        self.age =  random.gauss(40, 10)
+        self.income =  random.gauss(self.model.income_mean, 20000)
+        self.age =  random.gauss(self.model.age_mean, 10)
 
         # getting flood map values
         # Get a random location on the map

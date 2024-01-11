@@ -41,7 +41,10 @@ class AdaptationModel(Model):
                  # number of nearest neighbours for WS social network
                  number_of_nearest_neighbours = 5,
                  I_threshold = 50000,
-                 policy = 1.0
+                 policy = 1.0,
+                 age_mean = 40, 
+                 income_mean = 50000
+                 
                  ):
         
         super().__init__(seed = seed)
@@ -52,6 +55,8 @@ class AdaptationModel(Model):
 
         self.I_threshold = I_threshold
         self.policy = policy
+        self.age_mean = age_mean
+        self.income_mean = income_mean
 
         # network
         self.network = network # Type of network to be created
