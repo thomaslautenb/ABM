@@ -22,8 +22,9 @@ class Households(Agent):
         #
         #self.w2p=0
         self.cost = 1
-        self.response_efficacy =max(0,random.gauss(0.1, 0.1))
-        self.self_efficacy = max(0,random.gauss(0.1, 0.1))
+
+        self.response_efficacy =max(0,random.gauss(self.model.response_efficacy_mean, 0.1))
+        self.self_efficacy = max(0,random.gauss(self.model.self_efficacy_mean, 0.1))
         self.government_policy =1
         self.income =  random.gauss(self.model.income_mean, 20000)
         self.age =  random.gauss(self.model.age_mean, 10)

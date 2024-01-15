@@ -43,8 +43,9 @@ class AdaptationModel(Model):
                  I_threshold = 50000,
                  policy = 1.0,
                  age_mean = 40, 
-                 income_mean = 50000
-                 
+                 income_mean = 50000,
+                 response_efficacy_mean = 0.1,
+                 self_efficacy_mean =0.1
                  ):
         
         super().__init__(seed = seed)
@@ -57,6 +58,9 @@ class AdaptationModel(Model):
         self.policy = policy
         self.age_mean = age_mean
         self.income_mean = income_mean
+        self.response_efficacy_mean = response_efficacy_mean
+        self.self_efficacy_mean = self_efficacy_mean
+
 
         # network
         self.network = network # Type of network to be created
