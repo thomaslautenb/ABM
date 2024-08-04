@@ -1,7 +1,7 @@
 
 # Agent-Based Modelling (ABM) Q2 2023
 
-Welcome to the Agent-Based Modelling (ABM) repository for Q2 2023. This project focuses on developing and analyzing agent-based models to simulate complex systems.
+Welcome to the Agent-Based Modelling (ABM) repository for Q2 2023. This project focusses on the development of ABM-models to display protection motivation theory for flood adaptation
 
 ## Table of Contents
 - [About the Project](#about-the-project)
