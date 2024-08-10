@@ -1,4 +1,4 @@
-# Agent-Based Modelling with Python Mesa on flood adaptation (part of Agent-Based Modelling (ABM) Q2 2023 -TUDELFT)
+# Agent-Based Modelling with Python Mesa on flood adaptation 
 
 Welcome to the Agent-Based Modelling (ABM) repository for Q2 2023. This project focusses on the development of ABM-models to display protection motivation theory for flood adaptation
 
