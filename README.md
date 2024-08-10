@@ -11,7 +11,7 @@ Welcome to the Agent-Based Modelling (ABM) repository for Q2 2023. This project 
 - [Contact](#contact)
 
 ## About the Project
-This repository contains the coursework and final assignment for the SEN1211 course. The main objective is to implement and explore agent-based models using Python and the Mesa framework.
+This repository contains the coursework and final assignment for the course. The main objective is to implement and explore agent-based models using Python and the Mesa framework.
 
 ### Key Components
 - **Base Models**: Initial models used as the foundation for more complex simulations.
